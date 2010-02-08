@@ -15,14 +15,58 @@ import org.marketcetera.strategyagent.StrategyAgent;
  * Class for automatically launching strategies and data modules via
  * StrategyAgent.
  * 
- * NOTES.
+ * Command Line Args
  * 
- * 1. 
+ * 	Launcher [configDir] [strategySrc] [dataURN] [strategyClass] [stratParam]
  * 
+ * [configDir] 		-- directory with the SA instance configuration/modules
+ * [strategySrc] 	-- root directory for the strategy src (i.e src/java/main)
+ * [dataURN]		-- data module URN (i.e. metc:mdata:bogus:single)
+ * [strategyClass]  -- full class name (i.e. org.kohera.strategies.SuperStrat)
+ * [stratParam]		-- path to .properties file containing strategy parameters
  * 
- * @author Administrator
+ * All command-line arguments are mandatory except for [stratParam].
+ * 
+ * Example:
+ * 
+ * Create launcher/					
+ * 			config/				# dir with account configs
+ * 				account1/
+ * 					conf/		# account config
+ * 					modules/	# modules config
+ * 				account2/
+ * 					...
+ * 			lib/				# all dependencies
+ * 			src/				# strategy source
+ *				main/
+ *					java/		# strategy source root
+ *						org/
+ *							...
  *
- */
+ * Set up a bash script to run the launcher:
+ * 
+ *   #!/bin/bash
+ *   
+ *   JAVA_CP=./conf
+ *   for jarfile in $(ls ./lib)
+ *   do
+ *     JAVA_CP="$JAVA_CP;./lib/$jarfile"
+ *   done;
+ *   
+ *   java -cp "$JAVA_CP" org.kohera.launcher.Launcher [[[YOUR ARGS]]] 
+ *   tail -f logs/launcher.log
+ *
+ * Example args for the above setup:
+ * 
+ * Launcher config/account1 \
+ * 			src/main/java \
+ *          metc:mdata:bogus:single \
+ *          org.kohera.strategies.SuperStrat \
+ *          config/account1/conf/SuperStrat.properties
+ *
+ *
+ */							
+ 
 public class Launcher {
 
 	static {
