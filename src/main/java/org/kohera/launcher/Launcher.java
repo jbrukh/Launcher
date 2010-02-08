@@ -66,7 +66,7 @@ import org.marketcetera.strategyagent.StrategyAgent;
  *
  *
  */							
- 
+ 	
 public class Launcher {
 
 	static {
@@ -137,9 +137,11 @@ public class Launcher {
 	}
 	
 	public void launch() throws Exception {
+		logger.info("Launching StrategyAgent...");
 		agent = StrategyAgentUtils.startAgent(
 						getCreateStrategyCommand(),
 						getCreateDataFeedCommand());
+		logger.info("Starting " + strategyClass + "...");
 		StrategyAgentUtils.startStrategy(token);
 	}
 	
@@ -147,14 +149,18 @@ public class Launcher {
 	
 	public static void main( String[] args ) {
 		
-		if (args.length!=5) {
+		if (args.length<4) {
 			logger.error("USAGE: java <configDir> " +
 					"<strategy src root> <data module URN> <strategy class> <parameters file>");
 			return;
 		}
 		
 		Launcher launcher = new Launcher(
-				args[0],args[1],args[2],args[3],args[4]);
+				args[0],
+				args[1],
+				args[2],
+				args[3],
+				(args.length==5?args[4]:null));
 		
 		try {
 			launcher.launch();
